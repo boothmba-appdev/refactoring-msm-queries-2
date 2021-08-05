@@ -13,13 +13,18 @@
 #  director_id :integer
 #
 class Movie < ApplicationRecord
-  def director
-    key = self.director_id
+  has_many(:characters, { :class_name => "Character", :foreign_key => "movie_id" })
+  belongs_to(:director, { :class_name => "Director", :foreign_key => "director_id" })
+  has_many(:cast, { :through => :characters, :source => :actor })
 
-    matching_set = Director.where({ :id => key })
-
-    the_one = matching_set.at(0)
-
-    return the_one
-  end
+  #def cast
+  #  the_many = Array.new
+  #  self.characters.each do |joining_record|
+  #    destination_record = joining_record.actor
+  #    the_many.push(destination_record)
+  #  end
+  #  return the_many.flatten
+  #end
+  # equivalent to above method
+  #has_many(:cast, {:through => :characters, :source => :actor})
 end
